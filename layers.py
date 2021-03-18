@@ -4,11 +4,11 @@ import numpy as np
 
 class Layer(ABC):
     @abstractclassmethod
-    def forward():
+    def forward(self, inputs):
         pass
 
     @abstractclassmethod
-    def backward():
+    def backward(self, d_out):
         pass
 
 
@@ -20,22 +20,6 @@ class ReLU(Layer):
     def backward(self, d_out):
         inputs = self.cache
         return d_out * (inputs > 0)
-
-
-class Sigmoid(Layer):
-    def forward():
-        pass
-
-    def backward():
-        pass
-
-
-class Softmax(Layer):
-    def forward():
-        pass
-
-    def backward():
-        pass
 
 
 class Affine(Layer):
@@ -53,8 +37,15 @@ class Affine(Layer):
 
 
 class Dropout(Layer):
-    def forward(self, inputs):
-        pass
+    def __init__(self, prob: float) -> None:
+        super().__init__()
+        self.p = prob
 
-    def backward():
-        pass
+    def forward(self, inputs):
+        mask = np.random.binomial(1, self.p, size=inputs.shape)
+        self.cache = mask
+        return inputs * mask / (1-self.p)
+
+    def backward(self, d_out):
+        mask = self.cache
+        return d_out * mask / (1-self.p)
