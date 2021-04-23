@@ -1,13 +1,13 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 import numpy as np
 
 
 class Layer(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def forward(self, inputs):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def backward(self, d_out):
         pass
 
